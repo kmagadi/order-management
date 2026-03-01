@@ -1,4 +1,8 @@
 package com.karthik.ordermanagement.model;
 
-public class OrderStatus {
+public enum OrderStatus {
+    CREATED,
+    PROCESSING,
+    COMPLETED,
+    FAILED
 }

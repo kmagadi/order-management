@@ -1,4 +1,6 @@
 package com.karthik.ordermanagement.model;
 
-public class OrderType {
+public enum OrderType {
+    BUY,
+    SELL
 }
