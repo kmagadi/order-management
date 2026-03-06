@@ -6,6 +6,8 @@ This project implements a lightweight, high-throughput order management backend 
 
 The goal of this system is to simulate real-world backend infrastructure used in fintech, brokerage platforms, and large-scale e-commerce systems, with a focus on concurrency, scalability, fault tolerance, and clean architecture.
 
+The system also demonstrates the use of **polymorphic validation using the Strategy Pattern**, allowing validation rules to be extended without modifying existing business logic.
+
 ---
 
 ## Key Features
@@ -15,7 +17,8 @@ The goal of this system is to simulate real-world backend infrastructure used in
 * Thread-safe in-memory storage using concurrent collections
 * File-based audit logging using Java I/O
 * Real-time analytics using Java Streams
-* Validation and custom exception handling
+* Polymorphic validation using validator strategy pattern
+* Custom exception handling with descriptive error messages
 * Non-blocking asynchronous processing
 * Modular and clean layered architecture
 * Easily extensible to event-driven and distributed systems
@@ -41,6 +44,12 @@ The goal of this system is to simulate real-world backend infrastructure used in
                 +------------------------+
                 |     Order Service      |
                 | (Business Logic)       |
+                +------------------------+
+                           |
+                           v
+                +------------------------+
+                |   Order Validators     |
+                | (Polymorphic Strategy) |
                 +------------------------+
                            |
                            v
@@ -88,6 +97,7 @@ The application follows a clean layered structure:
 
 * Controller → Handles HTTP requests
 * Service → Business logic and orchestration
+* Validation → Polymorphic validation rules
 * Repository → In-memory storage
 * Processor → Asynchronous execution
 * Analytics → Stream-based computation
@@ -96,7 +106,25 @@ This design promotes scalability, testability, and maintainability.
 
 ---
 
-### 3. Concurrent Order Processing
+### 3. Polymorphic Order Validation
+
+The system uses a **validator strategy pattern** to perform order validation.
+
+A common interface `OrderValidator` defines the validation contract. Multiple validators implement this interface, such as:
+
+* QuantityValidator
+* PriceValidator
+
+Spring automatically injects all validator implementations, allowing the system to validate orders using a **validation chain**.
+
+This approach follows the **Open/Closed Principle (SOLID)**:
+
+* New validation rules can be added without modifying existing code.
+* Business logic remains clean and extensible.
+
+---
+
+### 4. Concurrent Order Processing
 
 The system uses a fixed-size thread pool to process orders asynchronously.
 
@@ -111,7 +139,7 @@ This mimics real trading or order fulfillment engines where multiple streams pro
 
 ---
 
-### 4. Thread-Safe In-Memory Storage
+### 5. Thread-Safe In-Memory Storage
 
 Orders are stored in memory using `ConcurrentHashMap`.
 
@@ -131,19 +159,20 @@ This approach is commonly used in:
 
 ---
 
-### 5. Order Lifecycle Management
+### 6. Order Lifecycle Management
 
 Each order goes through a lifecycle:
 
 * CREATED
 * PROCESSING
-* COMPLETED or FAILED
+* COMPLETED
+* FAILED
 
 This allows real-time monitoring and supports analytics and debugging.
 
 ---
 
-### 6. File-Based Audit Logging
+### 7. File-Based Audit Logging
 
 Every order event is persisted in a log file.
 
@@ -158,7 +187,7 @@ Such logging is mandatory in regulated environments like financial systems.
 
 ---
 
-### 7. Real-Time Analytics
+### 8. Real-Time Analytics
 
 The analytics module uses Java Streams to compute insights such as:
 
@@ -171,7 +200,7 @@ This demonstrates modern functional programming and real-time computation.
 
 ---
 
-### 8. Fault Tolerance and Resilience
+### 9. Fault Tolerance and Resilience
 
 The system is designed to continue processing even when some orders fail.
 
@@ -179,13 +208,13 @@ Failures are:
 
 * Logged
 * Marked as FAILED
-* Handled using custom exceptions
+* Handled using custom exceptions with descriptive messages
 
 This ensures system stability under unpredictable inputs.
 
 ---
 
-### 9. Scalability and Extensibility
+### 10. Scalability and Extensibility
 
 The architecture is modular and easily extensible to support:
 
@@ -226,6 +255,10 @@ src/main/java/com/karthik/ordermanagement
 ├── repository
 ├── service
 ├── util
+└── validation
+    ├── OrderValidator
+    ├── QuantityValidator
+    └── PriceValidator
 ```
 
 ---
@@ -300,4 +333,4 @@ A Python script can be used to simulate multiple users sending requests simultan
 
 ## Conclusion
 
-This project demonstrates the design and implementation of a high-performance, concurrent order processing system inspired by modern trading and e-commerce platforms. It showcases core backend engineering skills including concurrency, system design, fault tolerance, and scalable architecture.
+This project demonstrates the design and implementation of a high-performance, concurrent order processing system inspired by modern trading and e-commerce platforms. It showcases core backend engineering skills including concurrency, system design, polymorphism, fault tolerance, and scalable architecture.
