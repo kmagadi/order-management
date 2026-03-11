@@ -17,9 +17,7 @@ public class SecurityConfig {
 
                         // allow auth endpoints
                         .pathMatchers("/auth/**").permitAll()
-
-                        // everything else must be authenticated
-                        .anyExchange().authenticated()
+                        .anyExchange().permitAll()
                 )
                 .build();
     }
