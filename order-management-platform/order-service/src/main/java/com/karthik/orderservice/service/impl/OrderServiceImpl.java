@@ -38,4 +38,9 @@ public class OrderServiceImpl implements OrderService {
 
         return OrderMapper.toResponse(order);
     }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return repository.findAll();
+    }
 }

@@ -3,7 +3,9 @@ package com.karthik.orderservice.repository;
 import com.karthik.orderservice.model.Order;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,8 +22,8 @@ public class OrderRepository {
         return orders.get(id);
     }
 
-    public Collection<Order> findAll() {
-        return orders.values();
+    public List<Order> findAll() {
+        return new ArrayList<>(orders.values());
     }
 
 }
