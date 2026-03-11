@@ -20,14 +20,13 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<OrderResponseDTO> placeOrder(
+            @RequestHeader("X-Role") String role,
             @Valid @RequestBody OrderRequestDTO request) {
 
-        log.info("Received order request for customer: {}", request.getCustomerId());
+        if (!role.equals("ADMIN") && !role.equals("TRADER")) {
+            throw new RuntimeException("Access denied: insufficient permissions");
+        }
 
-        OrderResponseDTO response = orderService.placeOrder(request);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return ResponseEntity.ok(orderService.placeOrder(request));
     }
 }

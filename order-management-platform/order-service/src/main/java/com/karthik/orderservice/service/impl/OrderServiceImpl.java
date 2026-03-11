@@ -2,6 +2,7 @@ package com.karthik.orderservice.service.impl;
 
 import com.karthik.orderservice.dto.OrderRequestDTO;
 import com.karthik.orderservice.dto.OrderResponseDTO;
+import com.karthik.orderservice.mapper.OrderMapper;
 import com.karthik.orderservice.model.Order;
 import com.karthik.orderservice.model.OrderStatus;
 import com.karthik.orderservice.processor.OrderProcessor;
@@ -27,26 +28,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponseDTO placeOrder(OrderRequestDTO request) {
 
-        Order order = Order.builder()
-                .id(UUID.randomUUID().toString())
-                .customerId(request.getCustomerId())
-                .product(request.getProduct())
-                .orderType(request.getOrderType())
-                .quantity(request.getQuantity())
-                .price(request.getPrice())
-                .status(OrderStatus.CREATED)
-                .build();
+        Order order = OrderMapper.toEntity(request);
 
-        // Run polymorphic validations
         validators.forEach(v -> v.validate(order));
 
         repository.save(order);
 
         processor.process(order);
 
-        return OrderResponseDTO.builder()
-                .orderId(order.getId())
-                .status(order.getStatus().name())
-                .build();
+        return OrderMapper.toResponse(order);
     }
 }
