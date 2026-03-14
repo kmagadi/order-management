@@ -17,13 +17,17 @@ public class AnalyticsController {
     private final AnalyticsService analyticsService;
 
     @GetMapping("/summary")
-    public Map<String, Object> summary(
-            @RequestHeader("X-Role") String role) {
+    public Map<String, Object> summary(@RequestHeader("X-Role") String role) {
+        return analyticsService.getSummary(role);
+    }
 
-        if (!role.equals("ADMIN") && !role.equals("VIEWER")) {
-            throw new RuntimeException("Access denied");
-        }
+    @GetMapping("/buy-vs-sell")
+    public Map<String, Long> buyVsSell(@RequestHeader("X-Role") String role) {
+        return analyticsService.getBuyVsSell(role);
+    }
 
-        return analyticsService.getSummary();
+    @GetMapping("/top-customer")
+    public String topCustomer(@RequestHeader("X-Role") String role) {
+        return analyticsService.getTopCustomer(role);
     }
 }

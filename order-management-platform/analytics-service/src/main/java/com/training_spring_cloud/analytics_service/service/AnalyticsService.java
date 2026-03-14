@@ -4,9 +4,9 @@ import java.util.Map;
 
 public interface AnalyticsService {
 
-    Map<String, Object> getSummary();
+    Map<String, Object> getSummary(String role);
 
-    Map<String, Long> getBuyVsSell();
+    Map<String, Long> getBuyVsSell(String role);
 
-    String getTopCustomer();
+    String getTopCustomer(String role);
 }
